@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Antar — what your policy actually pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/antar.css}">
+</head>
+<body>
+<main class="sheet">
+
+    <header class="masthead">
+        <p class="wordmark">Antar <span>— the gap</span></p>
+        <p class="tagline">What your health policy actually pays, before you find out at the billing counter.</p>
+    </header>
+
+    <p class="step-marker">Step 1 of 3 — your policy</p>
+    <h1>Start with the terms, not the cover amount</h1>
+    <p class="lede">The sum insured is the number on the certificate. What you are actually covered for
+        depends on four clauses buried further in. Enter them here.</p>
+
+    <form th:action="@{/policy}" th:object="${policyForm}" method="post">
+
+        <fieldset>
+            <legend>The policy</legend>
+            <div class="field">
+                <label for="insurerName">Insurer</label>
+                <input type="text" id="insurerName" th:field="*{insurerName}" placeholder="e.g. Star Health">
+            </div>
+            <div class="field">
+                <label for="productName">Product name</label>
+                <input type="text" id="productName" th:field="*{productName}" placeholder="e.g. Family Health Optima">
+            </div>
+            <div class="field">
+                <label for="sumInsured">Sum insured (₹)</label>
+                <input type="number" id="sumInsured" th:field="*{sumInsured}" step="1000" min="1">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Room rent</legend>
+            <div class="field">
+                <label for="roomRentPercent">Room rent limit, % of sum insured per day</label>
+                <input type="number" id="roomRentPercent" th:field="*{roomRentPercent}" step="0.01" min="0.01">
+                <p class="hint">Usually 1% or 2%. On a ₹5,00,000 policy, 1% means ₹5,000 a day.</p>
+            </div>
+            <div class="check">
+                <input type="checkbox" id="proportionPharmacy" th:field="*{proportionPharmacy}">
+                <label for="proportionPharmacy">This policy also reduces pharmacy and implants proportionately</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Co-payment</legend>
+            <div class="field">
+                <label for="coPayPercent">Co-pay (%)</label>
+                <input type="number" id="coPayPercent" th:field="*{coPayPercent}" step="1" min="0" max="100">
+                <p class="hint">Enter 0 if your policy has none.</p>
+            </div>
+            <div class="field">
+                <label for="coPayOrder">When the co-pay is applied</label>
+                <select id="coPayOrder" th:field="*{coPayOrder}">
+                    <option value="AFTER_PROPORTION">After the room-rent proportion</option>
+                    <option value="BEFORE_PROPORTION">Before the room-rent proportion</option>
+                </select>
+                <p class="hint">Insurers differ, and the order changes what you are paid.</p>
+            </div>
+        </fieldset>
+
+        <button type="submit">Continue to the bill</button>
+    </form>
+
+    <p class="footnote">Antar computes and explains. It does not recommend insurance products.</p>
+
+</main>
+</body>
+</html>

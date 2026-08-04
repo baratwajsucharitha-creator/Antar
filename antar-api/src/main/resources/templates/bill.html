@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Antar — the hospital bill</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/antar.css}">
+</head>
+<body>
+<main class="sheet">
+
+    <header class="masthead">
+        <p class="wordmark">Antar <span>— the gap</span></p>
+        <p class="tagline" th:text="|${policy.insurerName()} · ${policy.productName()} · eligible room rent ₹${#numbers.formatDecimal(policy.eligibleRoomRentPerDay(), 1, 'COMMA', 0, 'POINT')} a day|">policy summary</p>
+    </header>
+
+    <p class="step-marker">Step 2 of 3 — the hospitalisation</p>
+    <h1>Enter the bill in blocks</h1>
+    <p class="lede">Hospital bills are long, but your policy only distinguishes five kinds of charge.
+        Take the totals from your bill's summary page.</p>
+
+    <form th:action="@{'/bill/' + ${policyId}}" th:object="${billForm}" method="post">
+
+        <fieldset>
+            <legend>The stay</legend>
+            <div class="field">
+                <label for="procedureCode">Procedure or reason</label>
+                <input type="text" id="procedureCode" th:field="*{procedureCode}">
+            </div>
+            <div class="field">
+                <label for="daysAdmitted">Days admitted</label>
+                <input type="number" id="daysAdmitted" th:field="*{daysAdmitted}" min="1">
+            </div>
+            <div class="field">
+                <label for="actualRoomRentPerDay">Room rate charged per day (₹)</label>
+                <input type="number" id="actualRoomRentPerDay" th:field="*{actualRoomRentPerDay}" step="100" min="0">
+                <p class="hint">The rate on the bill, not the one your policy allows.</p>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>The charges</legend>
+            <div class="field">
+                <label for="roomTotal">Room and bed charges (₹)</label>
+                <input type="number" id="roomTotal" th:field="*{roomTotal}" step="100" min="0">
+            </div>
+            <div class="field">
+                <label for="associatedTotal">Doctor, nursing, OT, ICU, investigations (₹)</label>
+                <input type="number" id="associatedTotal" th:field="*{associatedTotal}" step="100" min="0">
+                <p class="hint">These are the charges the room-rent proportion reduces.</p>
+            </div>
+            <div class="field">
+                <label for="pharmacyTotal">Pharmacy and consumables (₹)</label>
+                <input type="number" id="pharmacyTotal" th:field="*{pharmacyTotal}" step="100" min="0">
+            </div>
+            <div class="field">
+                <label for="implantTotal">Implants and devices (₹)</label>
+                <input type="number" id="implantTotal" th:field="*{implantTotal}" step="100" min="0">
+            </div>
+            <div class="field">
+                <label for="nonPayableTotal">Non-payable items (₹)</label>
+                <input type="number" id="nonPayableTotal" th:field="*{nonPayableTotal}" step="100" min="0">
+                <p class="hint">Gloves, registration, admin fees — the IRDAI Annexure I list. Your bill may group these as "non-medical".</p>
+            </div>
+        </fieldset>
+
+        <button type="submit">Show me the gap</button>
+    </form>
+
+    <p class="footnote"><a th:href="@{/}">Start over with a different policy</a></p>
+
+</main>
+</body>
+</html>

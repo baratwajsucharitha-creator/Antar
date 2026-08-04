@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Antar — your coverage gap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/antar.css}">
+</head>
+<body>
+<main class="sheet">
+
+    <header class="masthead">
+        <p class="wordmark">Antar <span>— the gap</span></p>
+        <p class="tagline" th:text="|${policy.insurerName()} · ${policy.productName()} · sum insured ₹${#numbers.formatDecimal(policy.sumInsured(), 1, 'COMMA', 0, 'POINT')}|">policy summary</p>
+    </header>
+
+    <p class="step-marker">Step 3 of 3 — what the policy pays</p>
+    <h1>Your bill, clause by clause</h1>
+    <p class="lede">Each line below is a term in your own policy doing what it was written to do.
+        The right column is what is left of the bill after it.</p>
+
+    <section class="ledger" aria-label="Deduction ledger">
+
+        <div class="ledger-head">
+            <span>Clause</span>
+            <span>Removed</span>
+            <span>Balance</span>
+        </div>
+
+        <div class="opening">
+            <span>Total hospital bill</span>
+            <span class="amount" th:text="'₹' + ${#numbers.formatDecimal(result.totalBill(), 1, 'COMMA', 0, 'POINT')}">₹3,00,000</span>
+        </div>
+
+        <div class="ledger-row" th:each="d, iter : ${result.deductions()}">
+            <span class="clause" th:text="${d.clauseReference()}">CLAUSE</span>
+            <span class="amount removed" th:text="'−₹' + ${#numbers.formatDecimal(d.amountRemoved(), 1, 'COMMA', 0, 'POINT')}">−₹18,000</span>
+            <span class="amount balance" th:text="'₹' + ${#numbers.formatDecimal(runningBalance[__${iter.index}__], 1, 'COMMA', 0, 'POINT')}">₹2,82,000</span>
+            <p class="why" th:text="${d.explanation()}">why this was removed</p>
+        </div>
+
+    </section>
+
+    <section class="verdict">
+        <p class="verdict-figure" th:text="'₹' + ${#numbers.formatDecimal(result.gap(), 1, 'COMMA', 0, 'POINT')}">₹1,23,825</p>
+        <p class="verdict-label">
+            is what your family pays from its own pocket —
+            <strong th:text="${result.gapPercentOfBill()} + '% of the bill'">41.3% of the bill</strong>.
+        </p>
+
+        <dl class="settled">
+            <div>
+                <dt>Hospital billed</dt>
+                <dd th:text="'₹' + ${#numbers.formatDecimal(result.totalBill(), 1, 'COMMA', 0, 'POINT')}">₹3,00,000</dd>
+            </div>
+            <div>
+                <dt>Insurer pays</dt>
+                <dd class="paid" th:text="'₹' + ${#numbers.formatDecimal(result.payout(), 1, 'COMMA', 0, 'POINT')}">₹1,76,175</dd>
+            </div>
+            <div>
+                <dt>You pay</dt>
+                <dd th:text="'₹' + ${#numbers.formatDecimal(result.gap(), 1, 'COMMA', 0, 'POINT')}">₹1,23,825</dd>
+            </div>
+        </dl>
+    </section>
+
+    <p class="footnote">
+        Every figure above traces to a clause in the terms you entered. Antar computes and explains;
+        it does not recommend insurance products, and it is not a substitute for your policy wording.
+        <br><br>
+        <a th:href="@{'/bill/' + ${policyId}}">Try a different bill</a> ·
+        <a th:href="@{/}">Start over with a different policy</a>
+    </p>
+
+</main>
+</body>
+</html>
