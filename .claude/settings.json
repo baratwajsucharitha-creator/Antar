@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep -liE \"anthropic|openai|llm|agent|claude\")"
+    ]
+  }
+}
