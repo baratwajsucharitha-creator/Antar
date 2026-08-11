@@ -12,6 +12,8 @@ server:
 spring:
   datasource:
     url: ${ANTAR_DB_URL}
+    username:
+    password:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       # The free-tier database auto-pauses when idle and takes a few seconds to wake.
