@@ -4,6 +4,12 @@
 # variable whose value is a Key Vault reference resolved by App Service using the
 # app's managed identity - the app itself never holds a secret or a Key Vault client.
 
+antar:
+  auth:
+    # In the cloud, a request without an Easy Auth principal is rejected.
+    # Locally this stays false so development does not need a login.
+    require-platform-principal: true
+
 server:
   # App Service Linux injects PORT. 8080 keeps local runs identical.
   port: ${PORT:8080}
@@ -12,8 +18,6 @@ server:
 spring:
   datasource:
     url: ${ANTAR_DB_URL}
-    username:
-    password:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       # The free-tier database auto-pauses when idle and takes a few seconds to wake.

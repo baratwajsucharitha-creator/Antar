@@ -15,6 +15,10 @@ public class PolicyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Stable subject id from the identity provider. The ownership key for every query. */
+    @Column(name = "owner_id", nullable = false, length = 100)
+    private String ownerId;
+
     @Column(name = "insurer_name", nullable = false, length = 120)
     private String insurerName;
 
@@ -49,6 +53,7 @@ public class PolicyEntity {
     }
 
     public Long getId() { return id; }
+    public String getOwnerId() { return ownerId; }
     public String getInsurerName() { return insurerName; }
     public String getProductName() { return productName; }
     public BigDecimal getSumInsured() { return sumInsured; }
@@ -59,6 +64,7 @@ public class PolicyEntity {
     public CoPayOrder getCoPayOrder() { return coPayOrder; }
     public List<SubLimitEmbeddable> getSubLimits() { return subLimits; }
 
+    public void setOwnerId(String v) { this.ownerId = v; }
     public void setInsurerName(String v) { this.insurerName = v; }
     public void setProductName(String v) { this.productName = v; }
     public void setSumInsured(BigDecimal v) { this.sumInsured = v; }

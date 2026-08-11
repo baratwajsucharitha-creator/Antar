@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xargs grep -liE \"anthropic|openai|llm|agent|claude\")"
+      "Bash(xargs grep -liE \"anthropic|openai|llm|agent|claude\")",
+      "Bash(jps)",
+      "Bash(wmic process *)",
+      "Bash(az account *)",
+      "Bash(az webapp *)",
+      "Bash(az sql *)",
+      "Bash(az login *)",
+      "Bash(git config *)",
+      "Bash(mkdir -p /tmp/antarv1logs)",
+      "Read(//tmp/**)",
+      "Bash(unzip -oq __TRACKED_VAR__/antarv1-logs.zip)",
+      "Bash(curl -s -m 20 -u '$antarv1:iv3kNRuoohSc3yidef8NFoem2cw5f2KCz6jd47lyZY1cRhA4cNjX90zTAPFv' https://antarv1-f8fbchbherddendu.scm.centralindia-01.azurewebsites.net/api/vfs/LogFiles/Application/spring.lw0sdlwk0000V9.log -o /tmp/spring_fresh3.log)",
+      "Bash(curl -s -m 90 -o /tmp/health7.json -w \"HTTP_STATUS:%{http_code} TIME:%{time_total}s\\\\n\" https://antarv1-f8fbchbherddendu.centralindia-01.azurewebsites.net/actuator/health)"
     ]
   }
 }

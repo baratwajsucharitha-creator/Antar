@@ -80,6 +80,25 @@ class GapControllerIT {
     }
 
     @Test
+    void anotherUsersPolicy_returns404_notForbidden() throws Exception {
+        // Created as the default local principal, then requested as someone else.
+        String policyBody = mockMvc.perform(post("/api/v1/policies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(POLICY_JSON))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        long policyId = objectMapper.readTree(policyBody).get("id").asLong();
+
+        mockMvc.perform(post("/api/v1/gap/compute")
+                        .header("X-MS-CLIENT-PRINCIPAL-ID", "someone-else")
+                        .header("X-MS-CLIENT-PRINCIPAL-NAME", "Someone Else")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(BILL_TEMPLATE.formatted(policyId)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void unknownPolicy_returns404() throws Exception {
         mockMvc.perform(post("/api/v1/gap/compute")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +106,7 @@ class GapControllerIT {
                 .andExpect(status().isNotFound());
     }
 
-  @Test
+   @Test
     void invalidRequest_returns400() throws Exception {
         mockMvc.perform(post("/api/v1/gap/compute")
                         .contentType(MediaType.APPLICATION_JSON)

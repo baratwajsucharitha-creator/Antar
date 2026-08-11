@@ -1,5 +1,6 @@
 package com.antar.api.web;
 
+import com.antar.api.security.UnauthenticatedException;
 import com.antar.api.service.PolicyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PolicyNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(PolicyNotFoundException ex) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<ApiError> handleUnauthenticated(UnauthenticatedException ex) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), List.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
