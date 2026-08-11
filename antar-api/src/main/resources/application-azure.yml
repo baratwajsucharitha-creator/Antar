@@ -19,6 +19,10 @@ spring:
   datasource:
     url: ${ANTAR_DB_URL}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    # Blank out the default profile's sa/blank credentials so Hikari falls back to
+    # the user/password embedded in ANTAR_DB_URL instead of overriding them.
+    username:
+    password:
     hikari:
       # The free-tier database auto-pauses when idle and takes a few seconds to wake.
       connection-timeout: 60000
