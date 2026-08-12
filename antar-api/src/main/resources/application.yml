@@ -26,6 +26,17 @@ spring:
       enabled: true
       path: /h2-console
 
+antar:
+  catalogue:
+    # Off everywhere by default, including local dev - opt in explicitly
+    # (e.g. -Dantar.catalogue.import-on-startup=true) when you want to load
+    # the CSVs. See docs/data/README.md "Import behaviour" for why: this app
+    # cold-starts often on a free-tier plan and free-tier DB, and an import
+    # running on every cold start is pure waste once the tables are populated.
+    import-on-startup: false
+    # When a target table already has rows, import skips it unless this is true.
+    import-force: false
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

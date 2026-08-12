@@ -1,0 +1,3 @@
+irdai_registration_no,legal_name,display_name,insurer_type,is_active,ceased_date,succeeded_by_insurer_registration_no,source,last_verified_date
+EXAMPLE-000,Example Health Insurance Company Limited,Example Health Insurance,STANDALONE_HEALTH,TRUE,,,EXAMPLE - REPLACE,2026-08-12
+EXAMPLE-001,Example General Insurance Company Limited,Example General Insurance,GENERAL,TRUE,,,EXAMPLE - REPLACE,2026-08-12

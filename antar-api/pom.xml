@@ -69,6 +69,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -76,6 +82,26 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!--
+                The catalogue CSVs live in docs/data (repo root) so edits are reviewable
+                diffs alongside the design doc, not buried in a Spring resources folder.
+                Only *.csv is bundled - README.md there is documentation, not app data,
+                and must never end up inside the jar.
+                See docs/data/README.md "Refresh cost" - this makes a catalogue edit
+                a rebuild-and-redeploy, not a live file change.
+            -->
+            <resource>
+                <directory>${project.basedir}/../docs/data</directory>
+                <targetPath>data</targetPath>
+                <includes>
+                    <include>*.csv</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -1,0 +1,3 @@
+insurer_registration_no,product_name,product_category,segment,availability_status,first_cleared_date,notes,source,last_verified_date
+EXAMPLE-000,Example Family Floater,INDEMNITY,RETAIL,UNKNOWN,,,EXAMPLE - REPLACE,2026-08-12
+EXAMPLE-000,Example Group Health Cover,INDEMNITY,GROUP,UNKNOWN,,,EXAMPLE - REPLACE,2026-08-12
