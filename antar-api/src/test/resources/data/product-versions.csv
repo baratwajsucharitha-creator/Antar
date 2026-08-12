@@ -1,0 +1,3 @@
+insurer_registration_no,product_name,segment,uin,version_label,irdai_cleared_date,effective_from,effective_to,verification_status,source_url,wording_pdf_url,source,last_verified_date
+TEST-INS-001,Test Family Floater,RETAIL,TESTUIN0001V012015,V01,2015-04-01,2015-04-01,2020-03-31,VERIFIED_IRDAI,https://example.invalid/clearance,https://example.invalid/wording.pdf,https://example.invalid/clearance,2026-08-12
+TEST-INS-001,Test Family Floater,RETAIL,TESTUIN0001V022020,V02,2020-04-01,2020-04-01,,UNVERIFIED,https://example.invalid/clearance,,https://example.invalid/clearance,2026-08-12
