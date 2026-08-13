@@ -1,3 +1,20 @@
 irdai_registration_no,legal_name,display_name,insurer_type,is_active,ceased_date,succeeded_by_insurer_registration_no,source,last_verified_date
-EXAMPLE-000,Example Health Insurance Company Limited,Example Health Insurance,STANDALONE_HEALTH,TRUE,,,EXAMPLE - REPLACE,2026-08-12
-EXAMPLE-001,Example General Insurance Company Limited,Example General Insurance,GENERAL,TRUE,,,EXAMPLE - REPLACE,2026-08-12
+,Star Health and Allied Insurance,Star Health and Allied Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Niva Bupa Health Insurance,Niva Bupa Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Care Health Insurance,Care Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ManipalCigna Health Insurance,ManipalCigna Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Aditya Birla Health Insurance,Aditya Birla Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Galaxy Health Insurance,Galaxy Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Narayana Health Insurance,Narayana Health Insurance,STANDALONE_HEALTH,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,HDFC ERGO General Insurance,HDFC ERGO General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ICICI Lombard General Insurance,ICICI Lombard General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Bajaj Allianz General Insurance,Bajaj Allianz General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Tata AIG General Insurance,Tata AIG General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,SBI General Insurance,SBI General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Reliance General Insurance,Reliance General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,The New India Assurance Company,The New India Assurance Company,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,National Insurance Company,National Insurance Company,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,The Oriental Insurance Company,The Oriental Insurance Company,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,United India Insurance Company,United India Insurance Company,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Go Digit General Insurance,Go Digit General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Cholamandalam MS General Insurance,Cholamandalam MS General Insurance,GENERAL,TRUE,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13

@@ -1,3 +1,32 @@
-insurer_registration_no,product_name,product_category,segment,availability_status,first_cleared_date,notes,source,last_verified_date
-EXAMPLE-000,Example Family Floater,INDEMNITY,RETAIL,UNKNOWN,,,EXAMPLE - REPLACE,2026-08-12
-EXAMPLE-000,Example Group Health Cover,INDEMNITY,GROUP,UNKNOWN,,,EXAMPLE - REPLACE,2026-08-12
+insurer_registration_no,insurer_display_name,product_name,product_category,segment,availability_status,first_cleared_date,notes,source,last_verified_date
+,Star Health and Allied Insurance,Family Health Optima,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Star Health and Allied Insurance,Star Comprehensive Insurance Policy,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Star Health and Allied Insurance,Senior Citizens Red Carpet,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Star Health and Allied Insurance,Star Health Assure,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Star Health and Allied Insurance,Young Star Insurance Policy,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Niva Bupa Health Insurance,ReAssure 2.0,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Niva Bupa Health Insurance,Health Companion,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Niva Bupa Health Insurance,Aspire,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Niva Bupa Health Insurance,Senior First,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Care Health Insurance,Care Supreme,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Care Health Insurance,Care,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Care Health Insurance,Care Advantage,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Care Health Insurance,Care Freedom,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,HDFC ERGO General Insurance,Optima Secure,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,HDFC ERGO General Insurance,Optima Restore,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,HDFC ERGO General Insurance,my:health Suraksha,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ICICI Lombard General Insurance,Complete Health Insurance,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ICICI Lombard General Insurance,Health AdvantEdge,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ICICI Lombard General Insurance,Elevate,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Aditya Birla Health Insurance,Activ One,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Aditya Birla Health Insurance,Activ Health,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Aditya Birla Health Insurance,Activ Fit,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Aditya Birla Health Insurance,Activ Assure Diamond,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ManipalCigna Health Insurance,ProHealth Prime,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ManipalCigna Health Insurance,Lifetime Health,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,ManipalCigna Health Insurance,Super Star,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Bajaj Allianz General Insurance,Health Guard,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Bajaj Allianz General Insurance,Health Care Supreme,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Tata AIG General Insurance,Medicare,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Tata AIG General Insurance,Medicare Premier,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13
+,Tata AIG General Insurance,Medicare Protect,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration and UIN pending verification,2026-08-13

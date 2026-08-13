@@ -21,6 +21,22 @@ UIN.** If you don't have a confirmed value, leave the cell blank rather than
 guess — a blank is `NULL` after import (unknown), which is correct; an
 invented number is wrong and looks correct, which is worse.
 
+`insurer.irdai_registration_no` is nullable (V4) for exactly this reason: the
+current seed data is publicly known insurer/product names with registration
+numbers and UINs still pending verification, and that's an honest, normal
+state for this table to be in, not a placeholder to feel bad about.
+
+## Natural keys when the registration number is blank
+
+Every import (insurers, then products, then versions) resolves its parent
+row the same way: **prefer the registration number when the row has one - it's
+authoritative - otherwise fall back to an exact match on the insurer's
+`display_name`.** So `products.csv` and `product-versions.csv` both carry an
+`insurer_registration_no` column *and* an `insurer_display_name` column; fill
+in whichever one you actually have (registration number if you have it,
+display name otherwise), matching `insurers.csv`'s `display_name` for that
+insurer exactly (case-sensitive, exact string match - no fuzzy matching).
+
 ## Where to get each value
 
 ### `insurers.csv`
@@ -57,7 +73,8 @@ site, "List of Products" / "Approved Products" sections).
 
 | Column | Expects |
 |---|---|
-| `insurer_registration_no` | Must match a row already present in `insurers.csv`. |
+| `insurer_registration_no` | The parent insurer's registration number, if known. Blank if not - see "Natural keys" above. |
+| `insurer_display_name` | The parent insurer's `display_name`, exactly as it appears in `insurers.csv`. Required when `insurer_registration_no` is blank. |
 | `product_name` | The product name as cleared, without the version suffix. |
 | `product_category` | One of `INDEMNITY`, `TOP_UP`, `SUPER_TOP_UP`, `FIXED_BENEFIT`, `CRITICAL_ILLNESS`, `PERSONAL_ACCIDENT`, `GOVERNMENT_SCHEME`. |
 | `segment` | `RETAIL` or `GROUP`. An insurer can sell the same product name as both — that's why the natural key includes this column. |
@@ -74,7 +91,7 @@ The UIN encodes the version number, e.g. `NBHHLIP22156V032122` is version 03.
 
 | Column | Expects |
 |---|---|
-| `insurer_registration_no`, `product_name`, `segment` | Together locate the parent row in `products.csv`. Must match exactly. |
+| `insurer_registration_no` / `insurer_display_name`, `product_name`, `segment` | Together locate the parent row in `products.csv`. Same rule as `products.csv`: registration number if you have it, display name otherwise. Must match exactly. |
 | `uin` | The IRDAI Unique Identification Number exactly as published. Never invented — if you can't find it, don't add the row at all. |
 | `version_label` | Parsed from the UIN if you can (e.g. `V03`). Optional. |
 | `irdai_cleared_date` | The FY clearance date. Optional. |
@@ -106,25 +123,29 @@ the jar — only `*.csv` files in this folder are bundled as a build resource.
 
 ## Import behaviour
 
-The import runner (`CsvCatalogueImportRunner`) is **off by default**, even
-locally, and always off on Azure unless explicitly turned on:
+The import runner (`CsvCatalogueImportRunner`) is:
 
-- `antar.catalogue.import-on-startup` — default `false`. Set to `true` to
-  import on app startup (e.g. locally, in `application-local.yml` or via
-  `-Dantar.catalogue.import-on-startup=true`).
+- **On by default for local/default-profile runs** (`application.yml`):
+  H2 is in-memory, so without this the catalogue would be empty every time
+  you start the app locally.
+- **Explicitly off for the azure profile** (`application-azure.yml` pins
+  `antar.catalogue.import-on-startup: false` itself - it does not just rely
+  on inheriting a default). Azure SQL is a persisted database, not
+  in-memory, and Antar runs on an Azure App Service Free (F1) tier that
+  cold-starts often. CPU-quota exhaustion has already taken the app down
+  once - an import running on every cold start against an already-populated
+  table would be pure waste.
+
+Override either way with `-Dantar.catalogue.import-on-startup=true|false`.
+
 - `antar.catalogue.import-force` — default `false`. If a target table
   already has rows, the importer skips that whole dataset and leaves it
   alone, *unless* this is `true`, in which case it re-upserts on the natural
   key regardless of what's already there.
 
-This exists because Antar runs on an Azure App Service Free (F1) tier that
-cold-starts often, against an Azure SQL free-tier database that auto-pauses.
-CPU-quota exhaustion has already taken the app down once — an import running
-on every cold start against a populated table would be pure waste, and is
-exactly the kind of thing that default-off protects against.
-
 Import is idempotent: re-running it against the same CSVs does not create
-duplicate rows (upsert on natural key — `irdai_registration_no` for insurers,
-`(insurer_id, product_name, segment)` for products, `uin` for versions), and
-every run writes a `data_import_run` row recording the dataset, source file,
-and inserted/updated/skipped counts.
+duplicate rows. Upsert key per dataset: insurers - registration number if
+present, else `display_name`; products - registration number/display name
+resolves the parent insurer, then `(insurer_id, product_name, segment)`;
+versions - `uin`. Every run writes a `data_import_run` row recording the
+dataset, source file, and inserted/updated/skipped counts.

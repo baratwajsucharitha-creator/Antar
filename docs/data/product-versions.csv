@@ -1,2 +1,1 @@
-insurer_registration_no,product_name,segment,uin,version_label,irdai_cleared_date,effective_from,effective_to,verification_status,source_url,wording_pdf_url,source,last_verified_date
-EXAMPLE-000,Example Family Floater,RETAIL,EXAMPLEUIN000000V000000,V01,,,,UNVERIFIED,https://example.invalid/clearance-list,,EXAMPLE - REPLACE,2026-08-12
+insurer_registration_no,insurer_display_name,product_name,segment,uin,version_label,irdai_cleared_date,effective_from,effective_to,verification_status,source_url,wording_pdf_url,source,last_verified_date
