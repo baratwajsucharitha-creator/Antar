@@ -1,5 +1,6 @@
 package com.antar.api.web;
 
+import com.antar.api.catalogue.web.CatalogueEntityNotFoundException;
 import com.antar.api.security.UnauthenticatedException;
 import com.antar.api.service.PolicyNotFoundException;
 import org.slf4j.Logger;
@@ -20,6 +21,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PolicyNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(PolicyNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(CatalogueEntityNotFoundException.class)
+    public ResponseEntity<ApiError> handleCatalogueNotFound(CatalogueEntityNotFoundException ex) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
     }
 
