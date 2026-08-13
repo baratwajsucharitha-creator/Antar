@@ -2,7 +2,9 @@ package com.antar.api.catalogue.service;
 
 import com.antar.api.catalogue.persistence.*;
 import com.antar.api.catalogue.web.CatalogueEntityNotFoundException;
+import com.antar.api.catalogue.web.dto.InsurerOption;
 import com.antar.api.catalogue.web.dto.InsurerResponse;
+import com.antar.api.catalogue.web.dto.ProductOption;
 import com.antar.api.catalogue.web.dto.ProductSummaryResponse;
 import com.antar.api.catalogue.web.dto.ProductVersionResponse;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,31 @@ public class CatalogueQueryService {
         this.insurerRepository = insurerRepository;
         this.productRepository = productRepository;
         this.versionRepository = versionRepository;
+    }
+
+    /**
+     * Server-rendered options for the policy form's insurer &lt;select&gt;
+     * (see WebController). Active insurers only - a ceased insurer isn't a
+     * sensible choice for someone taking out a policy today, even though its
+     * old products stay fully queryable through the catalogue API.
+     */
+    public List<InsurerOption> listActiveInsurerOptions() {
+        return insurerRepository.findByActiveTrueOrderByDisplayName().stream()
+                .map(i -> new InsurerOption(i.getId(), i.getDisplayName()))
+                .toList();
+    }
+
+    /**
+     * Every product across every insurer, embedded in the policy form's HTML as
+     * JSON so the product &lt;select&gt; can be filtered by insurer client-side
+     * with no network round trip. Unfiltered by availability, same as the API -
+     * a withdrawn product is still a real answer for someone who already holds it.
+     */
+    public List<ProductOption> listAllProductOptions() {
+        return productRepository.findAll().stream()
+                .sorted(Comparator.comparing(InsuranceProductEntity::getProductName))
+                .map(p -> new ProductOption(p.getInsurerId(), p.getProductName(), p.getAvailabilityStatus().name()))
+                .toList();
     }
 
     public List<InsurerResponse> listInsurers(InsurerType type, String q) {

@@ -1,5 +1,6 @@
 package com.antar.api.ui;
 
+import com.antar.api.catalogue.service.CatalogueQueryService;
 import com.antar.api.security.CurrentUser;
 import com.antar.api.service.GapService;
 import com.antar.api.web.dto.*;
@@ -19,9 +20,11 @@ public class WebController {
     private static final BigDecimal HUNDRED = new BigDecimal("100");
 
     private final GapService service;
+    private final CatalogueQueryService catalogueQueryService;
 
-    public WebController(GapService service) {
+    public WebController(GapService service, CatalogueQueryService catalogueQueryService) {
         this.service = service;
+        this.catalogueQueryService = catalogueQueryService;
     }
 
     @GetMapping("/")
@@ -29,6 +32,12 @@ public class WebController {
         model.addAttribute("policyForm", new PolicyForm());
         model.addAttribute("caller", caller);
         model.addAttribute("myPolicies", service.listPolicies(caller));
+        // Server-rendered, not fetched: the insurer <select> is built from this list
+        // directly in policy.html, so it's part of the HTML response itself and
+        // works with JavaScript disabled. Empty when the catalogue has no insurers -
+        // the template renders no <select> at all in that case.
+        model.addAttribute("insurers", catalogueQueryService.listActiveInsurerOptions());
+        model.addAttribute("catalogueProducts", catalogueQueryService.listAllProductOptions());
         return "policy";
     }
 

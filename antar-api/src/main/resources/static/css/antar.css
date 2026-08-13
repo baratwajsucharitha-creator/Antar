@@ -108,6 +108,8 @@ input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible
 
 .check { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; }
 
+.hidden { display: none; }
+
 button {
     font-family: "IBM Plex Sans", sans-serif;
     font-size: 0.9375rem;

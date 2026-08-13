@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/antar.css}">
-    <script th:src="@{/js/catalogue.js}" defer></script>
 </head>
 <body>
 <main class="sheet">
@@ -31,19 +30,132 @@
 
         <fieldset>
             <legend>The policy</legend>
-            <div class="field">
+
+            <div class="field" th:if="${not #lists.isEmpty(insurers)}">
+                <label for="insurerSelect">Insurer</label>
+                <select id="insurerSelect">
+                    <option value="">Select your insurer</option>
+                    <option th:each="insurer : ${insurers}"
+                            th:value="${insurer.id()}"
+                            th:text="${insurer.displayName()}"
+                            th:attr="data-display-name=${insurer.displayName()}"></option>
+                    <option value="__other__">Other — not listed</option>
+                </select>
+            </div>
+
+            <div class="field" id="insurerNameField">
                 <label for="insurerName">Insurer</label>
                 <input type="text" id="insurerName" th:field="*{insurerName}" placeholder="e.g. Star Health">
             </div>
-            <div class="field">
+
+            <div class="field" th:if="${not #lists.isEmpty(insurers)}">
+                <label for="productSelect">Product</label>
+                <select id="productSelect" disabled>
+                    <option value="">Select your insurer first</option>
+                    <option value="__other__">Other — not listed</option>
+                </select>
+            </div>
+
+            <div class="field" id="productNameField">
                 <label for="productName">Product name</label>
                 <input type="text" id="productName" th:field="*{productName}" placeholder="e.g. Family Health Optima">
             </div>
+
             <div class="field">
                 <label for="sumInsured">Sum insured (₹)</label>
                 <input type="number" id="sumInsured" th:field="*{sumInsured}" step="1000" min="1">
             </div>
         </fieldset>
+
+        <script th:if="${not #lists.isEmpty(insurers)}" th:inline="javascript">
+            /*<![CDATA[*/
+            (function () {
+                var catalogueProducts = /*[[${catalogueProducts}]]*/ [];
+
+                var STATUS_LABELS = {
+                    CLOSED_TO_NEW: "Closed to new customers",
+                    WITHDRAWN: "Withdrawn",
+                    UNKNOWN: "Availability not confirmed"
+                };
+
+                var insurerSelect = document.getElementById("insurerSelect");
+                var productSelect = document.getElementById("productSelect");
+                var insurerNameField = document.getElementById("insurerNameField");
+                var productNameField = document.getElementById("productNameField");
+                var insurerNameInput = document.getElementById("insurerName");
+                var productNameInput = document.getElementById("productName");
+
+                function rebuildProductOptions(insurerId) {
+                    while (productSelect.options.length > 0) {
+                        productSelect.remove(0);
+                    }
+
+                    var placeholder = document.createElement("option");
+                    placeholder.value = "";
+                    placeholder.textContent = insurerId ? "Select your product" : "Select your insurer first";
+                    productSelect.appendChild(placeholder);
+
+                    if (insurerId) {
+                        catalogueProducts
+                            .filter(function (p) { return String(p.insurerId) === String(insurerId); })
+                            .forEach(function (p) {
+                                var option = document.createElement("option");
+                                option.value = p.productName;
+                                var label = p.productName;
+                                var statusLabel = STATUS_LABELS[p.availabilityStatus];
+                                if (statusLabel) {
+                                    label += " — " + statusLabel;
+                                }
+                                option.textContent = label;
+                                productSelect.appendChild(option);
+                            });
+                    }
+
+                    var other = document.createElement("option");
+                    other.value = "__other__";
+                    other.textContent = "Other — not listed";
+                    productSelect.appendChild(other);
+
+                    productSelect.disabled = !insurerId;
+                }
+
+                insurerSelect.addEventListener("change", function () {
+                    var value = insurerSelect.value;
+                    if (value === "" || value === "__other__") {
+                        insurerNameField.classList.remove("hidden");
+                        if (value === "__other__") {
+                            insurerNameInput.value = "";
+                            insurerNameInput.focus();
+                        }
+                    } else {
+                        var selectedOption = insurerSelect.options[insurerSelect.selectedIndex];
+                        insurerNameInput.value = selectedOption.dataset.displayName;
+                        insurerNameField.classList.add("hidden");
+                    }
+
+                    rebuildProductOptions(value === "" || value === "__other__" ? null : value);
+                    productNameField.classList.remove("hidden");
+                    productNameInput.value = "";
+                });
+
+                productSelect.addEventListener("change", function () {
+                    var value = productSelect.value;
+                    if (value === "" || value === "__other__") {
+                        productNameField.classList.remove("hidden");
+                        if (value === "__other__") {
+                            productNameInput.value = "";
+                            productNameInput.focus();
+                        }
+                    } else {
+                        productNameInput.value = value;
+                        productNameField.classList.add("hidden");
+                    }
+                });
+
+                rebuildProductOptions(null);
+            })();
+            /*]]>*/
+        </script>
 
         <fieldset>
             <legend>Room rent</legend>
