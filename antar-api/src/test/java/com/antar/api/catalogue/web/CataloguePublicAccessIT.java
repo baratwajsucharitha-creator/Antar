@@ -17,7 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * still answer 200 in this same strict mode. This is the test that actually distinguishes
  * "public reference data" from "happens to work locally because auth is relaxed".
  */
-@SpringBootTest(properties = "antar.auth.require-platform-principal=true")
+@SpringBootTest(properties = {
+        "antar.auth.require-platform-principal=true",
+        // Otherwise the real catalogue seed loads at startup and insurer id 1 stops
+        // being "no such insurer" for the 404 assertions below.
+        "antar.catalogue.import-on-startup=false"
+})
 @AutoConfigureMockMvc
 class CataloguePublicAccessIT {
 

@@ -9,6 +9,17 @@ antar:
     # In the cloud, a request without an Easy Auth principal is rejected.
     # Locally this stays false so development does not need a login.
     require-platform-principal: true
+  catalogue:
+    # On: Azure SQL has no catalogue data until this runs at least once, and
+    # production needs the same seeded insurer/product dropdown as local dev.
+    # Safe on every cold start (this app is on Free F1 and cold-starts often):
+    # CatalogueImportService checks insurerRepository.count() > 0 before doing
+    # anything else, per dataset - a single cheap SELECT COUNT(*), not a scan -
+    # and skips the whole dataset once it's populated. Explicit here rather than
+    # inherited from the base application.yml default, so this profile's real
+    # behavior in production is never a silent consequence of what the local
+    # default happens to be set to.
+    import-on-startup: true
 
 server:
   # App Service Linux injects PORT. 8080 keeps local runs identical.

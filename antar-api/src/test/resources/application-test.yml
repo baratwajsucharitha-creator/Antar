@@ -1,0 +1,10 @@
+# Test-only overlay on top of the base application.yml (same mechanism as
+# application-azure.yml). Every @SpringBootTest/@DataJpaTest activates the
+# "test" profile so the catalogue CSV importer does NOT run automatically at
+# context startup - it runs inside an ApplicationRunner, which commits
+# straight to the shared in-memory H2 instance outside any test's
+# @Transactional rollback, and would otherwise permanently seed 19+ real
+# insurers into every other test sharing that instance in the same JVM run.
+antar:
+  catalogue:
+    import-on-startup: false

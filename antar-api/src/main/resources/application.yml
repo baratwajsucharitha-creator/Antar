@@ -28,12 +28,13 @@ spring:
 
 antar:
   catalogue:
-    # Off everywhere by default, including local dev - opt in explicitly
-    # (e.g. -Dantar.catalogue.import-on-startup=true) when you want to load
-    # the CSVs. See docs/data/README.md "Import behaviour" for why: this app
-    # cold-starts often on a free-tier plan and free-tier DB, and an import
-    # running on every cold start is pure waste once the tables are populated.
-    import-on-startup: false
+    # On for the default/local profile: H2 is in-memory, so the seed has to
+    # load on every start or there's nothing to see. The azure profile
+    # overrides this back to false explicitly - see application-azure.yml.
+    # See docs/data/README.md "Import behaviour" for why cloud stays off:
+    # this app cold-starts often on a free-tier plan and free-tier DB, and an
+    # import running on every cold start is pure waste once tables are populated.
+    import-on-startup: true
     # When a target table already has rows, import skips it unless this is true.
     import-force: false
 
