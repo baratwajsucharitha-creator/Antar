@@ -69,6 +69,24 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
+                    <configuration>
+                        <!--
+                            Surefire's own defaults (*Test.java, Test*.java, *Tests.java,
+                            *TestCase.java) do NOT match this project's *IT.java integration
+                            tests (GapControllerIT, CatalogueControllerIT, etc.) - that *IT
+                            pattern belongs to the separate Failsafe plugin, which this
+                            project doesn't use. Without this, `mvn test`/`mvn clean install`
+                            (and CI's `mvn -B clean verify`) silently run zero of them and
+                            still report BUILD SUCCESS - discovered when several *IT classes
+                            went unrun with no failure or warning of any kind.
+                        -->
+                        <includes>
+                            <include>**/*Test.java</include>
+                            <include>**/*Tests.java</include>
+                            <include>**/*TestCase.java</include>
+                            <include>**/*IT.java</include>
+                        </includes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
