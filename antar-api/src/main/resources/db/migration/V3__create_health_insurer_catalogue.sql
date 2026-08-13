@@ -13,12 +13,23 @@
 -- in practice here - but this would be wrong on a non-UTC server. These columns
 -- are a safety net only; @PrePersist/@PreUpdate in the entities set the real,
 -- always-UTC value on every write that goes through the app.
+--
+-- Free-text columns that hold a human-transcribed name (legal_name, display_name,
+-- product_name, notes, run_by) are NVARCHAR here, unlike `policy` which uses plain
+-- VARCHAR for insurer_name/product_name. Real SQL Server VARCHAR is codepage-limited
+-- and non-Unicode; it silently substitutes any character outside that codepage with
+-- "?" instead of erroring - a merged entity's legal name, or any transcribed name
+-- with a non-ASCII character, would be quietly corrupted with no failure to notice.
+-- H2 doesn't enforce that restriction, so it never caught this. Codes, enums, UINs
+-- and URLs stay VARCHAR - they're constrained to ASCII by IRDAI/URL syntax anyway.
+-- See docs/data-layer-design.md for the follow-up: `policy` should get the same
+-- widening in a future V4.
 
 CREATE TABLE insurer (
     id                      BIGINT       NOT NULL IDENTITY PRIMARY KEY,
     irdai_registration_no   VARCHAR(20)  NOT NULL,
-    legal_name              VARCHAR(200) NOT NULL,
-    display_name            VARCHAR(120) NOT NULL,
+    legal_name              NVARCHAR(200) NOT NULL,
+    display_name            NVARCHAR(120) NOT NULL,
     insurer_type            VARCHAR(30)  NOT NULL,  -- STANDALONE_HEALTH | GENERAL
     is_active               BIT          NOT NULL DEFAULT 1,
     -- Set when an insurer merges or exits. Their products stay queryable.
@@ -40,14 +51,14 @@ CREATE INDEX ix_insurer_active ON insurer (is_active, display_name);
 CREATE TABLE insurance_product (
     id                  BIGINT       NOT NULL IDENTITY PRIMARY KEY,
     insurer_id          BIGINT       NOT NULL,
-    product_name        VARCHAR(200) NOT NULL,
+    product_name        NVARCHAR(200) NOT NULL,
     product_category    VARCHAR(40)  NOT NULL,  -- INDEMNITY | TOP_UP | SUPER_TOP_UP
                                                  -- | FIXED_BENEFIT | CRITICAL_ILLNESS
                                                  -- | PERSONAL_ACCIDENT | GOVERNMENT_SCHEME
     segment             VARCHAR(20)  NOT NULL,  -- RETAIL | GROUP
     availability_status VARCHAR(20)  NOT NULL DEFAULT 'UNKNOWN',
     first_cleared_date  DATE         NULL,
-    notes               VARCHAR(500) NULL,      -- e.g. renamed after a merger
+    notes               NVARCHAR(500) NULL,      -- e.g. renamed after a merger
     source              VARCHAR(300) NOT NULL,
     last_verified_date  DATE         NOT NULL,
     created_date        DATETIME2    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -95,6 +106,6 @@ CREATE TABLE data_import_run (
     rows_inserted  INT          NOT NULL,
     rows_updated   INT          NOT NULL,
     rows_skipped   INT          NOT NULL,
-    run_by         VARCHAR(100) NOT NULL,
+    run_by         NVARCHAR(100) NOT NULL,
     run_at         DATETIME2    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
