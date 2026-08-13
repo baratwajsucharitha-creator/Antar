@@ -6,6 +6,13 @@
 -- version_terms_template and the policy.product_version_id link are deliberately
 -- NOT part of this migration - they are design-doc step 5 and depend on manually
 -- read policy wordings / an actual version-selection flow that doesn't exist yet.
+--
+-- CURRENT_TIMESTAMP on SQL Server maps to GETDATE() and returns server LOCAL
+-- time, not UTC (unlike SYSUTCDATETIME(), which H2's MSSQLServer compatibility
+-- mode does not support at all). Azure SQL runs UTC, so *_date/run_at are UTC
+-- in practice here - but this would be wrong on a non-UTC server. These columns
+-- are a safety net only; @PrePersist/@PreUpdate in the entities set the real,
+-- always-UTC value on every write that goes through the app.
 
 CREATE TABLE insurer (
     id                      BIGINT       NOT NULL IDENTITY PRIMARY KEY,
