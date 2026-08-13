@@ -1,4 +1,5 @@
-insurer_registration_no,product_name,product_category,segment,availability_status,first_cleared_date,notes,source,last_verified_date
-TEST-INS-001,Test Family Floater,INDEMNITY,RETAIL,OPEN_TO_NEW,2015-04-01,,https://example.invalid/clearance,2026-08-12
-TEST-INS-001,Test Family Floater,INDEMNITY,GROUP,UNKNOWN,,,https://example.invalid/clearance,2026-08-12
-TEST-INS-999,Unknown Insurer Product,INDEMNITY,RETAIL,UNKNOWN,,,https://example.invalid/clearance,2026-08-12
+insurer_registration_no,insurer_display_name,product_name,product_category,segment,availability_status,first_cleared_date,notes,source,last_verified_date
+TEST-INS-001,,Test Family Floater,INDEMNITY,RETAIL,OPEN_TO_NEW,2015-04-01,,https://example.invalid/clearance,2026-08-12
+TEST-INS-001,,Test Family Floater,INDEMNITY,GROUP,UNKNOWN,,,https://example.invalid/clearance,2026-08-12
+TEST-INS-999,,Unknown Insurer Product,INDEMNITY,RETAIL,UNKNOWN,,,https://example.invalid/clearance,2026-08-12
+,No Registration Number Insurer,No Reg No Product,INDEMNITY,RETAIL,UNKNOWN,,,Publicly known insurer/product name; IRDAI registration pending verification,2026-08-12

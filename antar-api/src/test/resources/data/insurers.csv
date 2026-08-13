@@ -1,3 +1,4 @@
 irdai_registration_no,legal_name,display_name,insurer_type,is_active,ceased_date,succeeded_by_insurer_registration_no,source,last_verified_date
 TEST-INS-001,Test Health Insurance Co Ltd,Test Health Insurance,STANDALONE_HEALTH,TRUE,,,https://example.invalid/irdai-list,2026-08-12
 TEST-INS-002,Test General Insurance Co Ltd,Test General Insurance,GENERAL,TRUE,,,https://example.invalid/irdai-list,2026-08-12
+,No Registration Number Insurer,No Registration Number Insurer,STANDALONE_HEALTH,TRUE,,,Publicly known insurer name; IRDAI registration pending verification,2026-08-12

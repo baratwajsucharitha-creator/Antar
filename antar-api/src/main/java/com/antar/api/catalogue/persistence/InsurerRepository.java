@@ -9,9 +9,14 @@ public interface InsurerRepository extends JpaRepository<InsurerEntity, Long> {
 
     Optional<InsurerEntity> findByIrdaiRegistrationNo(String irdaiRegistrationNo);
 
+    /** Exact-match lookup used as the import natural key when no registration number is known. */
+    Optional<InsurerEntity> findByDisplayName(String displayName);
+
     List<InsurerEntity> findByInsurerTypeOrderByDisplayName(InsurerType insurerType);
 
     List<InsurerEntity> findAllByOrderByDisplayName();
+
+    List<InsurerEntity> findByActiveTrueOrderByDisplayName();
 
     List<InsurerEntity> findByDisplayNameContainingIgnoreCaseOrderByDisplayName(String query);
 

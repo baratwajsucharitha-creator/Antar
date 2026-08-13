@@ -83,13 +83,19 @@ public class CatalogueImportService {
                     continue;
                 }
 
-                String registrationNo = row.get("irdai_registration_no");
-                Optional<InsurerEntity> existing = insurerRepository.findByIrdaiRegistrationNo(registrationNo);
+                String registrationNo = blankToNull(row.get("irdai_registration_no"));
+                String displayName = row.get("display_name");
+                // Prefer the registration number as the natural key when the row has one -
+                // it's the authoritative identifier. Most seed data today has none, so
+                // display_name is the fallback key: see docs/data-layer-design.md.
+                Optional<InsurerEntity> existing = registrationNo != null
+                        ? insurerRepository.findByIrdaiRegistrationNo(registrationNo)
+                        : insurerRepository.findByDisplayName(displayName);
                 InsurerEntity entity = existing.orElseGet(InsurerEntity::new);
 
                 entity.setIrdaiRegistrationNo(registrationNo);
                 entity.setLegalName(row.get("legal_name"));
-                entity.setDisplayName(row.get("display_name"));
+                entity.setDisplayName(displayName);
                 entity.setInsurerType(InsurerType.valueOf(row.get("insurer_type")));
                 entity.setActive(blankTo(row.get("is_active"), "TRUE").equalsIgnoreCase("TRUE"));
                 entity.setCeasedDate(parseDate(row.get("ceased_date")));
@@ -115,7 +121,7 @@ public class CatalogueImportService {
                 if (successorRegNo == null || successorRegNo.isBlank()) {
                     continue;
                 }
-                Optional<InsurerEntity> insurer = insurerRepository.findByIrdaiRegistrationNo(row.get("irdai_registration_no"));
+                Optional<InsurerEntity> insurer = resolveInsurer(row.get("irdai_registration_no"), row.get("display_name"));
                 Optional<InsurerEntity> successor = insurerRepository.findByIrdaiRegistrationNo(successorRegNo);
                 if (insurer.isPresent() && successor.isPresent()) {
                     insurer.get().setSucceededByInsurerId(successor.get().getId());
@@ -154,9 +160,10 @@ public class CatalogueImportService {
                     continue;
                 }
 
-                Optional<InsurerEntity> insurer = insurerRepository.findByIrdaiRegistrationNo(row.get("insurer_registration_no"));
+                Optional<InsurerEntity> insurer = resolveInsurer(row.get("insurer_registration_no"), row.get("insurer_display_name"));
                 if (insurer.isEmpty()) {
-                    log.warn("Skipping product row - unknown insurer_registration_no {}", row.get("insurer_registration_no"));
+                    log.warn("Skipping product row - unknown insurer (registration_no={}, display_name={})",
+                            row.get("insurer_registration_no"), row.get("insurer_display_name"));
                     skipped++;
                     continue;
                 }
@@ -214,9 +221,10 @@ public class CatalogueImportService {
                     continue;
                 }
 
-                Optional<InsurerEntity> insurer = insurerRepository.findByIrdaiRegistrationNo(row.get("insurer_registration_no"));
+                Optional<InsurerEntity> insurer = resolveInsurer(row.get("insurer_registration_no"), row.get("insurer_display_name"));
                 if (insurer.isEmpty()) {
-                    log.warn("Skipping product-version row - unknown insurer_registration_no {}", row.get("insurer_registration_no"));
+                    log.warn("Skipping product-version row - unknown insurer (registration_no={}, display_name={})",
+                            row.get("insurer_registration_no"), row.get("insurer_display_name"));
                     skipped++;
                     continue;
                 }
@@ -261,6 +269,19 @@ public class CatalogueImportService {
         ImportResult result = new ImportResult("product_version", sourceFile, inserted, updated, skipped, false);
         recordRun(result, runBy);
         return result;
+    }
+
+    /**
+     * Resolves an insurer the same way importInsurers keys its own upsert: prefer the
+     * registration number when the row has one (authoritative), otherwise fall back to
+     * an exact match on display name.
+     */
+    private Optional<InsurerEntity> resolveInsurer(String registrationNo, String displayName) {
+        String regNo = blankToNull(registrationNo);
+        if (regNo != null) {
+            return insurerRepository.findByIrdaiRegistrationNo(regNo);
+        }
+        return insurerRepository.findByDisplayName(displayName);
     }
 
     private void recordRun(ImportResult result, String runBy) {
