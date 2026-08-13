@@ -3,6 +3,8 @@ package com.antar.api.catalogue.persistence;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "insurer")
@@ -40,11 +42,15 @@ public class InsurerEntity {
     @Column(name = "last_verified_date", nullable = false)
     private LocalDate lastVerifiedDate;
 
+    // LocalDateTime, not Instant: Hibernate's SQL Server dialect maps Instant to
+    // DATETIMEOFFSET, not DATETIME2 - confirmed by a schema-validation failure
+    // against a real Azure SQL scratch database. Always set from the UTC clock
+    // explicitly, since a bare LocalDateTime carries no zone information itself.
     @Column(name = "created_date", nullable = false, updatable = false)
-    private java.time.Instant createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "updated_date", nullable = false)
-    private java.time.Instant updatedDate;
+    private LocalDateTime updatedDate;
 
     public InsurerEntity() {
         // JPA requires a no-arg constructor
@@ -52,14 +58,14 @@ public class InsurerEntity {
 
     @PrePersist
     void onCreate() {
-        java.time.Instant now = java.time.Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         this.createdDate = now;
         this.updatedDate = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        this.updatedDate = java.time.Instant.now();
+        this.updatedDate = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public Long getId() { return id; }
@@ -72,8 +78,8 @@ public class InsurerEntity {
     public Long getSucceededByInsurerId() { return succeededByInsurerId; }
     public String getSource() { return source; }
     public LocalDate getLastVerifiedDate() { return lastVerifiedDate; }
-    public java.time.Instant getCreatedDate() { return createdDate; }
-    public java.time.Instant getUpdatedDate() { return updatedDate; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public LocalDateTime getUpdatedDate() { return updatedDate; }
 
     public void setIrdaiRegistrationNo(String v) { this.irdaiRegistrationNo = v; }
     public void setLegalName(String v) { this.legalName = v; }

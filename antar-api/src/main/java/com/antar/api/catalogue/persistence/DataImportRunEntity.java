@@ -2,7 +2,8 @@ package com.antar.api.catalogue.persistence;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "data_import_run")
@@ -31,7 +32,7 @@ public class DataImportRunEntity {
     private String runBy;
 
     @Column(name = "run_at", nullable = false)
-    private Instant runAt;
+    private LocalDateTime runAt;
 
     public DataImportRunEntity() {
         // JPA requires a no-arg constructor
@@ -49,7 +50,7 @@ public class DataImportRunEntity {
 
     @PrePersist
     void onCreate() {
-        this.runAt = Instant.now();
+        this.runAt = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public Long getId() { return id; }
@@ -59,5 +60,5 @@ public class DataImportRunEntity {
     public int getRowsUpdated() { return rowsUpdated; }
     public int getRowsSkipped() { return rowsSkipped; }
     public String getRunBy() { return runBy; }
-    public Instant getRunAt() { return runAt; }
+    public LocalDateTime getRunAt() { return runAt; }
 }

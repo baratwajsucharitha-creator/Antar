@@ -2,8 +2,9 @@ package com.antar.api.catalogue.persistence;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "insurance_product")
@@ -44,10 +45,10 @@ public class InsuranceProductEntity {
     private LocalDate lastVerifiedDate;
 
     @Column(name = "created_date", nullable = false, updatable = false)
-    private Instant createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "updated_date", nullable = false)
-    private Instant updatedDate;
+    private LocalDateTime updatedDate;
 
     public InsuranceProductEntity() {
         // JPA requires a no-arg constructor
@@ -55,14 +56,14 @@ public class InsuranceProductEntity {
 
     @PrePersist
     void onCreate() {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         this.createdDate = now;
         this.updatedDate = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        this.updatedDate = Instant.now();
+        this.updatedDate = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public Long getId() { return id; }
@@ -75,8 +76,8 @@ public class InsuranceProductEntity {
     public String getNotes() { return notes; }
     public String getSource() { return source; }
     public LocalDate getLastVerifiedDate() { return lastVerifiedDate; }
-    public Instant getCreatedDate() { return createdDate; }
-    public Instant getUpdatedDate() { return updatedDate; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public LocalDateTime getUpdatedDate() { return updatedDate; }
 
     public void setInsurerId(Long v) { this.insurerId = v; }
     public void setProductName(String v) { this.productName = v; }

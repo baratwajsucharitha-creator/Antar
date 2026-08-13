@@ -2,8 +2,9 @@ package com.antar.api.catalogue.persistence;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "product_version")
@@ -48,10 +49,10 @@ public class ProductVersionEntity {
     private LocalDate lastVerifiedDate;
 
     @Column(name = "created_date", nullable = false, updatable = false)
-    private Instant createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "updated_date", nullable = false)
-    private Instant updatedDate;
+    private LocalDateTime updatedDate;
 
     public ProductVersionEntity() {
         // JPA requires a no-arg constructor
@@ -59,14 +60,14 @@ public class ProductVersionEntity {
 
     @PrePersist
     void onCreate() {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         this.createdDate = now;
         this.updatedDate = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        this.updatedDate = Instant.now();
+        this.updatedDate = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public Long getId() { return id; }
@@ -81,8 +82,8 @@ public class ProductVersionEntity {
     public String getWordingPdfUrl() { return wordingPdfUrl; }
     public String getSource() { return source; }
     public LocalDate getLastVerifiedDate() { return lastVerifiedDate; }
-    public Instant getCreatedDate() { return createdDate; }
-    public Instant getUpdatedDate() { return updatedDate; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public LocalDateTime getUpdatedDate() { return updatedDate; }
 
     public void setProductId(Long v) { this.productId = v; }
     public void setUin(String v) { this.uin = v; }
