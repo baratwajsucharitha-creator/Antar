@@ -18,13 +18,35 @@
         <a href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
     </div>
         <p class="wordmark">Antar <span>— the gap</span></p>
-        <p class="tagline" th:text="|${policy.insurerName()} · ${policy.productName()} · sum insured ₹${#numbers.formatDecimal(policy.sumInsured(), 1, 'COMMA', 0, 'POINT')}|">policy summary</p>
+        <p class="tagline">What your health policy actually pays, before you find out at the billing counter.</p>
     </header>
 
     <p class="step-marker">Step 3 of 3 — what the policy pays</p>
     <h1>Your bill, clause by clause</h1>
     <p class="lede">Each line below is a term in your own policy doing what it was written to do.
         The right column is what is left of the bill after it.</p>
+
+    <div class="context-strip">
+        <span th:text="${policy.insurerName()} + ' · ' + ${policy.productName()}">Insurer · Product</span>
+        <span class="amount" th:text="'Sum insured ' + ${@rupeeFormatter.format(policy.sumInsured())}">Sum insured ₹5,00,000</span>
+    </div>
+
+    <div class="erosion" th:if="${not #lists.isEmpty(result.deductions())}"
+         th:with="deductionCount=${#lists.size(result.deductions())}">
+        <p class="erosion-label">How the bill erodes</p>
+        <div class="erosion-bar">
+            <div th:each="w, iter : ${erosionWidths}"
+                 th:style="'width:' + ${w} + '%; animation-delay: ' + (${iter.index} * 0.15) + 's;'"
+                 th:class="'erosion-seg erosion-seg-' + (${iter.index} % 5)"></div>
+            <div class="erosion-seg erosion-retained"
+                 th:style="'width:' + ${retainedWidthPercent} + '%; animation-delay: ' + (${deductionCount} * 0.15) + 's;'"></div>
+        </div>
+        <div class="erosion-legend">
+            <span><span class="dot dot-deduction"></span
+                ><span th:text="${deductionCount} + (${deductionCount == 1} ? ' deduction' : ' deductions')">4 deductions</span></span>
+            <span><span class="dot dot-retained"></span>retained</span>
+        </div>
+    </div>
 
     <section class="ledger" aria-label="Deduction ledger">
 
@@ -36,20 +58,21 @@
 
         <div class="opening">
             <span>Total hospital bill</span>
-            <span class="amount" th:text="'₹' + ${#numbers.formatDecimal(result.totalBill(), 1, 'COMMA', 0, 'POINT')}">₹3,00,000</span>
+            <span class="amount" th:text="${@rupeeFormatter.format(result.totalBill())}">₹3,00,000</span>
         </div>
 
         <div class="ledger-row" th:each="d, iter : ${result.deductions()}">
             <span class="clause" th:text="${d.clauseReference()}">CLAUSE</span>
-            <span class="amount removed" th:text="'−₹' + ${#numbers.formatDecimal(d.amountRemoved(), 1, 'COMMA', 0, 'POINT')}">−₹18,000</span>
-            <span class="amount balance" th:text="'₹' + ${#numbers.formatDecimal(runningBalance[__${iter.index}__], 1, 'COMMA', 0, 'POINT')}">₹2,82,000</span>
+            <span class="amount removed" th:text="'−' + ${@rupeeFormatter.format(d.amountRemoved())}">−₹18,000</span>
+            <span class="amount balance" th:text="${@rupeeFormatter.format(runningBalance[__${iter.index}__])}">₹2,82,000</span>
             <p class="why" th:text="${d.explanation()}">why this was removed</p>
         </div>
 
     </section>
 
     <section class="verdict">
-        <p class="verdict-figure" th:text="'₹' + ${#numbers.formatDecimal(result.gap(), 1, 'COMMA', 0, 'POINT')}">₹1,23,825</p>
+        <p class="verdict-label-top">The verdict</p>
+        <p class="verdict-figure" th:text="${@rupeeFormatter.format(result.gap())}">₹1,23,825</p>
         <p class="verdict-label">
             is what your family pays from its own pocket —
             <strong th:text="${result.gapPercentOfBill()} + '% of the bill'">41.3% of the bill</strong>.
@@ -58,15 +81,15 @@
         <dl class="settled">
             <div>
                 <dt>Hospital billed</dt>
-                <dd th:text="'₹' + ${#numbers.formatDecimal(result.totalBill(), 1, 'COMMA', 0, 'POINT')}">₹3,00,000</dd>
+                <dd th:text="${@rupeeFormatter.format(result.totalBill())}">₹3,00,000</dd>
             </div>
             <div>
                 <dt>Insurer pays</dt>
-                <dd class="paid" th:text="'₹' + ${#numbers.formatDecimal(result.payout(), 1, 'COMMA', 0, 'POINT')}">₹1,76,175</dd>
+                <dd class="paid" th:text="${@rupeeFormatter.format(result.payout())}">₹1,76,175</dd>
             </div>
             <div>
                 <dt>You pay</dt>
-                <dd th:text="'₹' + ${#numbers.formatDecimal(result.gap(), 1, 'COMMA', 0, 'POINT')}">₹1,23,825</dd>
+                <dd class="owed" th:text="${@rupeeFormatter.format(result.gap())}">₹1,23,825</dd>
             </div>
         </dl>
     </section>

@@ -92,6 +92,12 @@ public class WebController {
         model.addAttribute("result", result);
         model.addAttribute("policyId", policyId);
         model.addAttribute("runningBalance", runningBalance(result));
+        // Erosion bar widths, computed here rather than in the template: each
+        // deduction's share of the total bill, plus what's retained (the payout),
+        // as plain percentages for CSS width. Purely visual, so double precision
+        // is fine - this never feeds back into a money figure.
+        model.addAttribute("erosionWidths", erosionWidths(result));
+        model.addAttribute("retainedWidthPercent", widthPercent(result.payout(), result.totalBill()));
         return "result";
     }
 
@@ -104,6 +110,26 @@ public class WebController {
             balances.add(balance);
         }
         return balances;
+    }
+
+    private List<Double> erosionWidths(GapComputeResponse result) {
+        List<Double> widths = new ArrayList<>();
+        for (DeductionTraceResponse deduction : result.deductions()) {
+            widths.add(widthPercent(deduction.amountRemoved(), result.totalBill()));
+        }
+        return widths;
+    }
+
+    private double widthPercent(BigDecimal amount, BigDecimal totalBill) {
+        if (totalBill.signum() == 0) {
+            return 0.0;
+        }
+        // Rounded to 4dp: this is a CSS width, not a money figure, but double division
+        // still produces long repeating-decimal artifacts (e.g. 58.72500000000001)
+        // that would otherwise land verbatim in the rendered style attribute.
+        return BigDecimal.valueOf(amount.doubleValue() / totalBill.doubleValue() * 100.0)
+                .setScale(4, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     private void addLine(List<BillLineRequest> lines, String description, BillCategory category, BigDecimal amount) {
